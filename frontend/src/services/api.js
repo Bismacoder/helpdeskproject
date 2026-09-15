@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Create Axios Instance
+// Create Axios Instance with dynamic baseURL fallback
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: {
     'Content-Type': 'application/json',
   },

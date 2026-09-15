@@ -226,7 +226,41 @@ const runTests = async () => {
   console.log('====================================================\n');
 };
 
-runTests().catch((err) => {
+const checkServerUp = () => {
+  return new Promise((resolve) => {
+    const req = http.get('http://localhost:5000/', (res) => {
+      resolve(res.statusCode === 200);
+    });
+    req.on('error', () => resolve(false));
+    req.setTimeout(2000, () => {
+      req.destroy();
+      resolve(false);
+    });
+  });
+};
+
+const run = async () => {
+  const isUp = await checkServerUp();
+  if (!isUp) {
+    console.log('[Test Runner] Local server not detected on port 5000. Launching in-process server...');
+    require('./server');
+    // Wait for server to initialize DB and listen
+    let ready = false;
+    for (let i = 0; i < 20; i++) {
+      await new Promise((r) => setTimeout(r, 1000));
+      ready = await checkServerUp();
+      if (ready) break;
+    }
+    if (!ready) {
+      throw new Error('Timed out waiting for backend server to start.');
+    }
+  }
+
+  await runTests();
+  process.exit(0);
+};
+
+run().catch((err) => {
   console.error('\n❌ Test Error:', err);
   process.exit(1);
 });
