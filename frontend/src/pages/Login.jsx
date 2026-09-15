@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LifeBuoy, Mail, Lock, ArrowRight, ShieldCheck, UserCheck, User, Eye, EyeOff } from 'lucide-react';
+import { LifeBuoy, Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { Alert } from '../components/Alert';
 
 export const Login = () => {
@@ -33,12 +33,6 @@ export const Login = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleQuickLogin = (demoEmail, demoPass) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setError('');
   };
 
   return (
@@ -97,7 +91,6 @@ export const Login = () => {
             </div>
           </div>
 
-
           <button
             type="submit"
             className="btn btn-primary"
@@ -108,48 +101,6 @@ export const Login = () => {
             <ArrowRight size={18} />
           </button>
         </form>
-
-        {/* Demo Credentials Box */}
-        <div className="demo-credentials-box">
-          <h4>⚡ Quick Demo Credentials</h4>
-          <div className="demo-btn-group">
-            <button
-              type="button"
-              className="demo-btn"
-              onClick={() => handleQuickLogin('admin@helpdesk.com', 'admin123')}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <ShieldCheck size={14} color="#7e22ce" />
-                <strong>Admin</strong>: admin@helpdesk.com
-              </span>
-              <span>Fill</span>
-            </button>
-
-            <button
-              type="button"
-              className="demo-btn"
-              onClick={() => handleQuickLogin('agent@helpdesk.com', 'agent123')}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <UserCheck size={14} color="#3730a3" />
-                <strong>Agent</strong>: agent@helpdesk.com
-              </span>
-              <span>Fill</span>
-            </button>
-
-            <button
-              type="button"
-              className="demo-btn"
-              onClick={() => handleQuickLogin('user@helpdesk.com', 'user123')}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <User size={14} color="#475569" />
-                <strong>Requester</strong>: user@helpdesk.com
-              </span>
-              <span>Fill</span>
-            </button>
-          </div>
-        </div>
 
         <div className="auth-footer">
           Don't have an account? <Link to="/register">Create a Requester account</Link>
