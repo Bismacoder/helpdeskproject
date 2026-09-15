@@ -1,0 +1,11 @@
+{
+  "name": "helpdesk-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "frontend": "npm run dev --prefix frontend",
+    "backend": "npm run start --prefix backend",
+    "seed": "npm run seed --prefix backend"
+  }
+}
