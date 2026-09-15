@@ -5,7 +5,7 @@ import { RoleBadge } from '../components/Badge';
 import { Modal } from '../components/Modal';
 import { Loader } from '../components/Loader';
 import { Alert } from '../components/Alert';
-import { Search, Edit2, Trash2, Shield, UserX, UserCheck, Inbox } from 'lucide-react';
+import { Search, Edit2, Trash2, Shield, UserX, UserCheck, Inbox, Lock, Eye, EyeOff } from 'lucide-react';
 
 export const ManageUsers = () => {
   const { user: currentUser } = useAuth();
@@ -26,7 +26,9 @@ export const ManageUsers = () => {
   const [role, setRole] = useState('requester');
   const [isActive, setIsActive] = useState(true);
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [saving, setSaving] = useState(false);
+
 
   // Delete confirmation
   const [deletingUser, setDeletingUser] = useState(null);
@@ -348,14 +350,29 @@ export const ManageUsers = () => {
 
           <div className="form-group">
             <label>Reset Password (Optional)</label>
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Leave blank to keep current password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="search-input-wrapper">
+              <span className="search-icon">
+                <Lock size={18} />
+              </span>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="with-toggle"
+                placeholder="Leave blank to keep current password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                tabIndex="-1"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
+
         </form>
       </Modal>
 

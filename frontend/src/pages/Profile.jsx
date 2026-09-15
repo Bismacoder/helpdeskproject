@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Lock, CheckCircle2, Shield, Calendar } from 'lucide-react';
+import { User, Mail, Lock, CheckCircle2, Shield, Calendar, Eye, EyeOff } from 'lucide-react';
 import { RoleBadge } from '../components/Badge';
 import { Alert } from '../components/Alert';
 
@@ -11,6 +11,8 @@ export const Profile = () => {
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [loading, setLoading] = useState(false);
 
@@ -142,11 +144,21 @@ export const Profile = () => {
                   <Lock size={18} />
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
+                  className="with-toggle"
                   placeholder="Leave blank to keep current"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  tabIndex="-1"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
@@ -157,14 +169,25 @@ export const Profile = () => {
                   <Lock size={18} />
                 </span>
                 <input
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  className="with-toggle"
                   placeholder="Re-enter new password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  tabIndex="-1"
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
           </div>
+
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
             <button type="submit" className="btn btn-primary" disabled={loading}>
