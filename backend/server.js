@@ -19,18 +19,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serverless DB Connection Check
-app.use(async (req, res, next) => {
-  if (process.env.VERCEL) {
-    try {
-      await connectDB();
-    } catch (err) {
-      console.error('Serverless DB connection error:', err.message);
-    }
-  }
-  next();
-});
-
 // Base / Health Check Route
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -39,6 +27,32 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     timestamp: new Date().toISOString(),
   });
+});
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'API health check passed.',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Database Connection Middleware for all API endpoints
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    if (process.env.VERCEL) {
+      await autoSeedIfEmpty();
+    }
+    next();
+  } catch (err) {
+    console.error(`[Database Middleware Error for ${req.method} ${req.originalUrl}]:`, err.message);
+    return res.status(503).json({
+      success: false,
+      message: 'Database connection failed. Please check MONGO_URI configuration and database status.',
+      error: err.message,
+    });
+  }
 });
 
 // Mount Routes

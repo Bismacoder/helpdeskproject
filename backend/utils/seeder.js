@@ -258,15 +258,23 @@ const seedStandalone = async () => {
   }
 };
 
+let seedInProgress = false;
+let seedAlreadyChecked = false;
+
 const autoSeedIfEmpty = async () => {
+  if (seedAlreadyChecked || seedInProgress) return;
+  seedInProgress = true;
   try {
     const userCount = await User.countDocuments();
     if (userCount === 0) {
       console.log('[AutoSeed] Database is empty. Seeding initial test data...');
       await performSeed(false);
     }
+    seedAlreadyChecked = true;
   } catch (err) {
     console.warn(`[AutoSeed] Check failed: ${err.message}`);
+  } finally {
+    seedInProgress = false;
   }
 };
 
