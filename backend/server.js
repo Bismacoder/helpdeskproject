@@ -13,11 +13,23 @@ const app = express();
 
 // Core Middlewares
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: true,
   credentials: true,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serverless DB Connection Check
+app.use(async (req, res, next) => {
+  if (process.env.VERCEL) {
+    try {
+      await connectDB();
+    } catch (err) {
+      console.error('Serverless DB connection error:', err.message);
+    }
+  }
+  next();
+});
 
 // Base / Health Check Route
 app.get('/', (req, res) => {
@@ -43,7 +55,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// Start Server after database connection is established
+// Start Server locally when not running as a Vercel serverless function
 const startServer = async () => {
   try {
     await connectDB();
@@ -59,7 +71,9 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
